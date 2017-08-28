@@ -18,6 +18,9 @@ function googletagCatfish(gt) {
         document.body.clientWidth;
 
     var debug = false;
+    var autoCloseTimeout = false;
+    var backgroundColor = 'transparent';
+
     var adsPlaceId = 'catfish-ads';
 
     var adsBox, adsCloseButton, adsPlace = null;
@@ -50,14 +53,14 @@ function googletagCatfish(gt) {
         adsBox = document.createElement('div');
         adsBox.className = 'gt-catfish-box';
 
-        adsCloseButton = document.createElement('div');
-        adsCloseButton.className = 'gt-catfish__button-close';
-        adsCloseButton.onclick = hideAdsBox;
-        adsBox.appendChild(adsCloseButton);
-
         adsPlace = document.createElement('div');
         adsPlace.className = 'gt-catfish__place';
         adsPlace.id = adsPlaceId;
+
+        adsCloseButton = document.createElement('div');
+        adsCloseButton.className = 'gt-catfish__button-close';
+        adsCloseButton.onclick = hideAdsBox;
+        adsPlace.appendChild(adsCloseButton);
 
         adsBox.appendChild(adsPlace);
 
@@ -71,13 +74,13 @@ function googletagCatfish(gt) {
      * @return {Void}
      */
     function createAdsStyle() {
-        var css = '.gt-catfish-box { display: flex; align-items: center; justify-content: center; }';
-        css += '.catfish-ads--visible { position: fixed; z-index: 999999; }';
+        var css = '.gt-catfish-box { display: none; background-color: ' + backgroundColor + '; }';
+        css += '.gt-catfish-box.catfish-ads--visible { display: flex; position: fixed; align-items: center; justify-content: center; z-index: 999999; }';
         css += '.catfish-ads--fullscreen { top: 0; right: 0; bottom: 0; left: 0; }';
         css += '.catfish-ads--bottom { right: 0; bottom: 0; left: 0; }';
-        css += '.gt-catfish__button-close { position: absolute; top: 15px; right: 15px; width: 30px; height: 30px; background-color:#000;border-radius:50%;border:2px solid #fff;box-shadow:0 0 3px #666;background-size:100% 100%;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM4IDEyLjgzbC0yLjgzLTIuODMtMTEuMTcgMTEuMTctMTEuMTctMTEuMTctMi44MyAyLjgzIDExLjE3IDExLjE3LTExLjE3IDExLjE3IDIuODMgMi44MyAxMS4xNy0xMS4xNyAxMS4xNyAxMS4xNyAyLjgzLTIuODMtMTEuMTctMTEuMTd6IiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==) }';
+        css += '.gt-catfish__button-close { position: absolute; top: 5px; left: 5px; width: 25px; height: 25px; background-color:#000;border-radius:50%;border:2px solid #fff;box-shadow:0 0 3px #666;background-size:100% 100%;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM4IDEyLjgzbC0yLjgzLTIuODMtMTEuMTcgMTEuMTctMTEuMTctMTEuMTctMi44MyAyLjgzIDExLjE3IDExLjE3LTExLjE3IDExLjE3IDIuODMgMi44MyAxMS4xNy0xMS4xNyAxMS4xNyAxMS4xNyAyLjgzLTIuODMtMTEuMTctMTEuMTd6IiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==) }';
         css += '.catfish-ads--bottom .gt-catfish__button-close { top: -15px; }';
-        css += '.gt-catfish__place { max-width: 100%; max-height: 100%; overflow: hidden; }';
+        css += '.gt-catfish__place { position: relative; max-width: 100%; max-height: 100%; }';
 
         var style = document.createElement('style');
         style.type = 'text/css';
@@ -113,7 +116,7 @@ function googletagCatfish(gt) {
      * Create slot string key
      *
      * @param {String} slot
-     * @param {Array} size
+     * @param {Array} size Array of with and height, as [width, height]
      * @param {String} mode
      * @return {String}
      */
@@ -126,7 +129,7 @@ function googletagCatfish(gt) {
      * Add googletag slot
      *
      * @param {String} slot
-     * @param {Array} sizes
+     * @param {Array} sizes Array of with and height, as [width, height]
      * @param {String} mode
      * @returns {Void}
      */
@@ -162,6 +165,30 @@ function googletagCatfish(gt) {
          */
         debug: function(enabled) {
             debug = enabled;
+            return this;
+        },
+
+
+        /**
+         * Set autoclose timeout
+         *
+         * @param {Numeric} timeout Timeout in ms
+         * @returns {Object}
+         */
+        autoCloseTimeout: function(timeout) {
+            autoCloseTimeout = timeout;
+            return this;
+        },
+
+
+        /**
+         * Set background color
+         *
+         * @param {Numeric} timeout Timeout in ms
+         * @returns {Object}
+         */
+        backgroundColor: function(color) {
+            backgroundColor = color;
             return this;
         },
 
@@ -264,6 +291,11 @@ function googletagCatfish(gt) {
                 this.googletag().display(adsPlace);
 
             }).bind(this));
+
+            // Autoclose timeout
+            if (autoCloseTimeout) {
+                setTimeout(hideAdsBox, autoCloseTimeout);
+            }
 
             return this;
         }
