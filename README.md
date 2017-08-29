@@ -31,7 +31,7 @@ Add to your page before close body tag
 ```html
 <!-- Load GPT script, if not loaded yet-->
 <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
-<!-- Load gpt-catfish script -->
+<!-- Load gpt-catfish script from CDN -->
 <script async='async' src="https://cdn.jsdelivr.net/gh/nechehin/gpt-catfish@0.0.2/googletag-catfish.min.js"></script>
 ```
    
@@ -107,6 +107,13 @@ catfish
 ### Full example
 
 ```html
+<!-- In your head -->
+<script>
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+</script>
+        
+<!-- Anywhere in your page -->        
 <script>
 (function(w,c){
      w[c] = function(catfish){
