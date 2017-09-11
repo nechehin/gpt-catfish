@@ -278,6 +278,12 @@ function googletagCatfish(gt) {
 
                 // add event to sign the slot as redered or not
                 this.googletag().pubads().addEventListener('slotRenderEnded', function (event) {
+
+                    if (event.isEmpty) {
+                        log('Empty ads response');
+                        return;
+                    }
+
                     var renderedSlotKey = slotKey(event.slot['C'], event.size);
                     if (renderedSlotKey in SLOTS_MODES) {
                         var mode = SLOTS_MODES[renderedSlotKey];
