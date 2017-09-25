@@ -32,7 +32,7 @@ Add to your page before close body tag
 <!-- Load GPT script, if not loaded yet-->
 <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
 <!-- Load gpt-catfish script from CDN -->
-<script async='async' src="https://cdn.jsdelivr.net/gh/nechehin/gpt-catfish@0.0.2/googletag-catfish.min.js"></script>
+<script async='async' src="https://cdn.jsdelivr.net/gh/nechehin/gpt-catfish@latest/googletag-catfish.min.js"></script>
 ```
    
 ## Advanced configuration
@@ -136,5 +136,5 @@ catfish
 })(window, 'google-tag-catfish');
 </script>   
 <script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
-<script async='async' src="https://cdn.jsdelivr.net/gh/nechehin/gpt-catfish@0.0.2/googletag-catfish.min.js"></script>
+<script async='async' src="https://cdn.jsdelivr.net/gh/nechehin/gpt-catfish@latest/googletag-catfish.min.js"></script>
 ```  
