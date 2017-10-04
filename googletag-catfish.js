@@ -36,6 +36,7 @@ function googletagCatfish(gt) {
      * Log message if debug enabled
      *
      * @param {String} msg
+     * @returns {Void}
      */
     function log(msg) {
         if (debug) {
@@ -98,6 +99,7 @@ function googletagCatfish(gt) {
      * Show ads in mode
      *
      * @param {String} mode
+     * @returns {Void}
      */
     function showAdsBox(mode) {
         adsBox.className += ' catfish-ads--visible ' + mode;
@@ -106,6 +108,8 @@ function googletagCatfish(gt) {
 
     /**
      * Hide ads
+     *
+     * @returns {Void}
      */
     function hideAdsBox() {
         adsBox.className = adsBox.className.replace('catfish-ads--visible', '');
@@ -129,7 +133,7 @@ function googletagCatfish(gt) {
      * Add googletag slot
      *
      * @param {String} slot
-     * @param {Array} sizes Array of with and height, as [width, height]
+     * @param {Array} size Array of with and height, as [width, height]
      * @param {String} mode
      * @returns {Void}
      */
@@ -184,7 +188,7 @@ function googletagCatfish(gt) {
         /**
          * Set background color
          *
-         * @param {Numeric} timeout Timeout in ms
+         * @param {String} color Background color, #fff, rgba(0,0,0) etc (default transparent)
          * @returns {Object}
          */
         backgroundColor: function(color) {
@@ -276,20 +280,24 @@ function googletagCatfish(gt) {
                 this.googletag().pubads().enableSingleRequest();
                 this.googletag().enableServices();
 
-                // add event to sign the slot as redered or not
+                // add event to sign the slot as rendered or not
                 this.googletag().pubads().addEventListener('slotRenderEnded', function (event) {
 
-                    if (event.isEmpty) {
-                        log('Empty ads response');
-                        return;
-                    }
+                    var renderedSlotKey = slotKey(event.slot.getAdUnitPath(), event.size);
 
-                    var renderedSlotKey = slotKey(event.slot['C'], event.size);
                     if (renderedSlotKey in SLOTS_MODES) {
+
+                        if (event.isEmpty) {
+                            log('Empty ads response from slot ' + event.slot.getAdUnitPath());
+                            return;
+                        }
+
                         var mode = SLOTS_MODES[renderedSlotKey];
-                        log('rendred slot ' + event.slot['C'] +
+
+                        log('rendered slot ' + event.slot.getAdUnitPath() +
                             ' size ' + event.size.join('x') +
                             ' mode ' + mode);
+
                         showAdsBox(mode);
                     }
                 });
