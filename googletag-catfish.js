@@ -7,6 +7,7 @@
 /**
  * Google-tag catfish
  *
+ * @version 0.0.5
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -20,6 +21,7 @@ function googletagCatfish(gt) {
     var debug = false;
     var autoCloseTimeout = false;
     var backgroundColor = 'transparent';
+    var zIndex = '999999';
 
     var adsPlaceId = 'catfish-ads';
 
@@ -76,7 +78,7 @@ function googletagCatfish(gt) {
      */
     function createAdsStyle() {
         var css = '.gt-catfish-box { display: none; background-color: ' + backgroundColor + '; }';
-        css += '.gt-catfish-box.catfish-ads--visible { display: flex; position: fixed; align-items: center; justify-content: center; z-index: 999999; }';
+        css += '.gt-catfish-box.catfish-ads--visible { display: flex; position: fixed; align-items: center; justify-content: center; z-index: ' + zIndex + '; }';
         css += '.catfish-ads--fullscreen { top: 0; right: 0; bottom: 0; left: 0; }';
         css += '.catfish-ads--bottom { right: 0; bottom: 0; left: 0; }';
         css += '.gt-catfish__button-close { position: absolute; top: 5px; left: 5px; width: 25px; height: 25px; background-color:#000;border-radius:50%;border:2px solid #fff;box-shadow:0 0 3px #666;background-size:100% 100%;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM4IDEyLjgzbC0yLjgzLTIuODMtMTEuMTcgMTEuMTctMTEuMTctMTEuMTctMi44MyAyLjgzIDExLjE3IDExLjE3LTExLjE3IDExLjE3IDIuODMgMi44MyAxMS4xNy0xMS4xNyAxMS4xNyAxMS4xNyAyLjgzLTIuODMtMTEuMTctMTEuMTd6IiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==) }';
@@ -193,6 +195,18 @@ function googletagCatfish(gt) {
          */
         backgroundColor: function(color) {
             backgroundColor = color;
+            return this;
+        },
+
+
+        /**
+         * Set catfish zIndex
+         *
+         * @param {String} value new catfish zIndex
+         * @returns {Object}
+         */
+        zIndex: function(value) {
+            zIndex = value;
             return this;
         },
 

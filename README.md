@@ -95,6 +95,17 @@ catfish
     .render();
 ```
 
+### z-index
+
+Set catfish z-index
+
+```js
+catfish
+    .zIndex('999')
+    .addFullscreenModeSlot('/your_slot_name', [320, 480])
+    .render();
+```
+
 ### Enable debug log
 
 ```js
@@ -122,6 +133,7 @@ catfish
              .debug(true)
              .autoCloseTimeout(5000)
              .backgroundColor('#fff')
+             .zIndex('999')
              .addWidth(0, 480, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [320, 480]);
                  this.addBottomModeSlot('/your_slot_name', [320, 100]);
