@@ -7,7 +7,7 @@
 /**
  * Google-tag catfish
  *
- * @version 0.0.7
+ * @version 0.0.8
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -34,7 +34,8 @@ function googletagCatfish(gt) {
     var SLOTS_MODES = {};
 
     var EVENTS = {
-        RENDERED: 'rendered'
+        RENDERED: 'rendered',
+        CLOSED: 'closed'
     };
 
     var adsRendered = false;
@@ -134,6 +135,7 @@ function googletagCatfish(gt) {
      */
     function hideAdsBox() {
         adsBox.className = adsBox.className.replace('catfish-ads--visible', '');
+        fireEvent(EVENTS.CLOSED);
     }
 
 

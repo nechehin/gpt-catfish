@@ -109,6 +109,7 @@ catfish
 ### Events
 Available events for listen:
 - rendered (catfish.EVENTS.RENDERED) - fire after ads was rendered
+- closed (catfish.EVENTS.CLOSED) - fire after ads was closed
 
 ```js
 catfish
