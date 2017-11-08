@@ -7,7 +7,7 @@
 /**
  * Google-tag catfish
  *
- * @version 0.0.5
+ * @version 0.0.6
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -258,7 +258,7 @@ function googletagCatfish(gt) {
         addWidth: function(minWidth, maxWidth, cb) {
 
             if (winWidth < minWidth || winWidth > maxWidth ) {
-                log('width ' + minWidth + '-' + maxWidth + ' - skiped');
+                log('width ' + minWidth + '-' + maxWidth + ' (' + winWidth + ') - skiped');
                 return this;
             }
 
