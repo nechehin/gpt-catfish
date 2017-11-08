@@ -106,6 +106,19 @@ catfish
     .render();
 ```
 
+### Events
+Available events for listen:
+- rendered (catfish.EVENTS.RENDERED) - fire after ads was rendered
+
+```js
+catfish
+    .addFullscreenModeSlot('/your_slot_name', [320, 480])
+    .addEventListener(catfish.EVENTS.RENDERED, function(){ 
+        console.log('event: ads rendered'); 
+    })
+    .render();
+```
+
 ### Enable debug log
 
 ```js
@@ -114,6 +127,8 @@ catfish
     .addFullscreenModeSlot('/your_slot_name', [320, 480])
     .render();
 ```
+
+also, you can enable debug by ?gpt-catfish-debug query param
 
 ### Full example
 
