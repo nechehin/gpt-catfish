@@ -7,7 +7,7 @@
 /**
  * Google-tag catfish
  *
- * @version 0.0.8
+ * @version 0.0.9
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -22,13 +22,16 @@ function googletagCatfish(gt) {
     var autoCloseTimeout = false;
     var backgroundColor = 'transparent';
     var zIndex = '999999';
+    var defaultMode = false;
 
     var adsPlaceId = 'catfish-ads';
 
     var adsBox, adsCloseButton, adsPlace = null;
 
-    var ADS_MODE_FULLSCREEN = 'catfish-ads--fullscreen';
-    var ADS_MODE_BOTTOM = 'catfish-ads--bottom';
+    var ADS_MODES = {
+        FULLSCREEN: 'catfish-ads--fullscreen',
+        BOTTOM: 'catfish-ads--bottom'
+    }
 
     var SLOTS = {};
     var SLOTS_MODES = {};
@@ -164,17 +167,40 @@ function googletagCatfish(gt) {
 
 
     /**
+     * Check if mode exists
+     *
+     * @param {String} mode
+     * @return {Boolean}
+     */
+    function verifyMode(mode) {
+        for (var m in ADS_MODES) {
+            if (ADS_MODES[m] === mode) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * Add googletag slot
      *
      * @param {String} slot
      * @param {Array} size Array of with and height, as [width, height]
      * @param {String} mode
-     * @returns {Void}
+     * @returns {Boolean}
      */
     function addSlot(slot, size, mode) {
+
+        if (!verifyMode(mode)) {
+            log('Undefined mode: ' + mode);
+            return false;
+        }
+
         SLOTS[slot] = SLOTS[slot] || { sizes: [] };
         SLOTS[slot].sizes.push(size);
         SLOTS_MODES[slotSizeKey(slot, size)] = mode;
+        return true;
     }
 
 
@@ -231,6 +257,15 @@ function googletagCatfish(gt) {
      */
     function onSlotRenderEnded(event) {
 
+        if (!(event.slot.getAdUnitPath() in SLOTS)) {
+            return;
+        }
+
+        if (event.isEmpty) {
+            log('Empty ads response from slot ' + event.slot.getAdUnitPath());
+            return;
+        }
+
         if (adsRendered) {
             log('Warning: multiple ads was rendered');
         }
@@ -238,27 +273,56 @@ function googletagCatfish(gt) {
         var renderedSlotSizeKey = slotSizeKey(event.slot.getAdUnitPath(), event.size);
 
         if (renderedSlotSizeKey in SLOTS_MODES) {
-
-            if (event.isEmpty) {
-                log('Empty ads response from slot ' + event.slot.getAdUnitPath());
-                return;
-            }
-
-            var mode = SLOTS_MODES[renderedSlotSizeKey];
-
-            log('rendered slot ' + event.slot.getAdUnitPath() +
-                ' size ' + event.size.join('x') +
-                ' mode ' + mode);
-
-            showAdsBox(mode);
-
-            fireEvent(EVENTS.RENDERED);
-
-            adsRendered = true;
-
-        } else if (event.slot.getAdUnitPath() in SLOTS) {
-            log('Undefined mode for slot ' + event.slot.getAdUnitPath() + ' size ' + event.size.join('x'));
+            showAds(event, SLOTS_MODES[renderedSlotSizeKey]);
+            return;
         }
+
+        if (!defaultMode) {
+            log('Undefined mode for slot ' + event.slot.getAdUnitPath() + ' size ' + event.size.join('x'));
+            return;
+        }
+
+        log('Render slot ' + event.slot.getAdUnitPath() + ' size ' + event.size.join('x') + ' in default mode: ' + defaultMode);
+
+        showAds(event, defaultMode);
+    }
+
+
+    /**
+     * Show ads in mode
+     *
+     * @param {String} slot
+     * @param {String} mode
+     */
+    function showAds(event, mode) {
+
+        log('rendered slot ' + event.slot.getAdUnitPath() +
+            ' size ' + event.size.join('x') +
+            ' mode ' + mode);
+
+        showAdsBox(mode);
+
+        fireEvent(EVENTS.RENDERED);
+
+        adsRendered = true;
+    }
+
+
+    /**
+     * Set default ads mode
+     *
+     * @param {String} mode
+     * @returns {boolean}
+     */
+    function setDefaultMode(mode) {
+
+        if (!verifyMode(mode)) {
+            log('Undefined mode: ' + mode);
+            return false;
+        }
+
+        defaultMode = mode;
+        return true;
     }
 
 
@@ -266,6 +330,7 @@ function googletagCatfish(gt) {
     return {
 
         EVENTS: EVENTS,
+        MODES: ADS_MODES,
 
         addEventListener: function(eventName, listener) {
             document.addEventListener(eventName, listener);
@@ -339,7 +404,7 @@ function googletagCatfish(gt) {
          * @returns {Object}
          */
         addFullscreenModeSlot: function(slot, size) {
-            addSlot(slot, size, ADS_MODE_FULLSCREEN);
+            addSlot(slot, size, ADS_MODES.FULLSCREEN);
             return this;
         },
 
@@ -352,7 +417,7 @@ function googletagCatfish(gt) {
          * @returns {Object}
          */
         addBottomModeSlot: function(slot, size) {
-            addSlot(slot, size, ADS_MODE_BOTTOM);
+            addSlot(slot, size, ADS_MODES.BOTTOM);
             return this;
         },
 
@@ -376,6 +441,28 @@ function googletagCatfish(gt) {
 
             cb.call(this);
 
+            return this;
+        },
+
+
+        /**
+         * Set fullscreen mode as default
+         *
+         * @returns {Object}
+         */
+        setDefaultModeFullscreen: function() {
+            setDefaultMode(ADS_MODES.FULLSCREEN);
+            return this;
+        },
+
+
+        /**
+         * Set bottom mode as default
+         *
+         * @returns {Object}
+         */
+        setDefaultModeBottom: function() {
+            setDefaultMode(ADS_MODES.BOTTOM);
             return this;
         },
 

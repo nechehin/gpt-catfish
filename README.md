@@ -61,6 +61,24 @@ catfish
     .render();
 ```   
 
+### Default mode
+   
+Set bottom mode as default
+```js
+catfish
+    .addFullscreenModeSlot('/your_slot_name', [320, 480])
+    .setDefaultModeBottom()
+    .render();
+```
+
+Set fullscreen mode as default
+```js
+catfish
+    .addBottomModeSlot('/your_slot_name', [320, 100])
+    .setDefaultModeFullscreen()
+    .render();
+```
+
 ### Add slots only for small (or any sizes) screens
 
 ```js
@@ -153,6 +171,7 @@ also, you can enable debug by ?gpt-catfish-debug query param
              .addWidth(0, 480, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [320, 480]);
                  this.addBottomModeSlot('/your_slot_name', [320, 100]);
+                 this.setDefaultModeBottom()
              })
              .addWidth(481, 640, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [480, 480]);
