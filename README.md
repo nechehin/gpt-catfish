@@ -171,7 +171,7 @@ also, you can enable debug by ?gpt-catfish-debug query param
              .addWidth(0, 480, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [320, 480]);
                  this.addBottomModeSlot('/your_slot_name', [320, 100]);
-                 this.setDefaultModeBottom()
+                 this.setDefaultModeBottom();
              })
              .addWidth(481, 640, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [480, 480]);
