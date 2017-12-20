@@ -7,7 +7,7 @@
 /**
  * Google-tag catfish
  *
- * @version 0.0.9
+ * @version 0.0.10
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -41,6 +41,10 @@ function googletagCatfish(gt) {
         CLOSED: 'closed'
     };
 
+    var CLOSE_BUTTON_OPTIONS = {};
+    CLOSE_BUTTON_OPTIONS[ADS_MODES.FULLSCREEN] = { position: { top: '5px', left: '5px' }, size: '25px'};
+    CLOSE_BUTTON_OPTIONS[ADS_MODES.BOTTOM] = { position: { top: '-15px', left: '5px' }, size: '25px'};
+
     var adsRendered = false;
 
 
@@ -70,12 +74,12 @@ function googletagCatfish(gt) {
         adsPlace.className = 'gt-catfish__place';
         adsPlace.id = adsPlaceId;
 
-        adsCloseButton = document.createElement('div');
+        adsBox.appendChild(adsPlace);
+
+        adsCloseButton = document.createElement('a');
         adsCloseButton.className = 'gt-catfish__button-close';
         adsCloseButton.onclick = hideAdsBox;
-        adsPlace.appendChild(adsCloseButton);
-
-        adsBox.appendChild(adsPlace);
+        adsBox.appendChild(adsCloseButton);
 
         document.body.appendChild(adsBox);
     }
@@ -104,8 +108,7 @@ function googletagCatfish(gt) {
         css += '.gt-catfish-box.catfish-ads--visible { display: flex; position: fixed; align-items: center; justify-content: center; z-index: ' + zIndex + '; }';
         css += '.catfish-ads--fullscreen { top: 0; right: 0; bottom: 0; left: 0; }';
         css += '.catfish-ads--bottom { right: 0; bottom: 0; left: 0; }';
-        css += '.gt-catfish__button-close { position: absolute; top: 5px; left: 5px; width: 25px; height: 25px; background-color:#000;border-radius:50%;border:2px solid #fff;box-shadow:0 0 3px #666;background-size:100% 100%;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM4IDEyLjgzbC0yLjgzLTIuODMtMTEuMTcgMTEuMTctMTEuMTctMTEuMTctMi44MyAyLjgzIDExLjE3IDExLjE3LTExLjE3IDExLjE3IDIuODMgMi44MyAxMS4xNy0xMS4xNyAxMS4xNyAxMS4xNyAyLjgzLTIuODMtMTEuMTctMTEuMTd6IiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==) }';
-        css += '.catfish-ads--bottom .gt-catfish__button-close { top: -15px; }';
+        css += '.gt-catfish__button-close { display:block; position:absolute; background-color:#000; border-radius:50%; border:2px solid #fff; box-shadow:0 0 3px #666;background-size:100% 100%;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM4IDEyLjgzbC0yLjgzLTIuODMtMTEuMTcgMTEuMTctMTEuMTctMTEuMTctMi44MyAyLjgzIDExLjE3IDExLjE3LTExLjE3IDExLjE3IDIuODMgMi44MyAxMS4xNy0xMS4xNyAxMS4xNyAxMS4xNyAyLjgzLTIuODMtMTEuMTctMTEuMTd6IiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==) }';
         css += '.gt-catfish__place, .gt-catfish__place div { position: relative; max-width: 100%; max-height: 100%; }';
 
         var style = document.createElement('style');
@@ -127,7 +130,24 @@ function googletagCatfish(gt) {
      * @returns {Void}
      */
     function showAdsBox(mode) {
+        applyCloseButtonStyles(mode);
         adsBox.className += ' catfish-ads--visible ' + mode;
+    }
+
+
+    /**
+     * Apply close button styles
+     *
+     * @param {String} mode
+     */
+    function applyCloseButtonStyles(mode) {
+        for (var i in CLOSE_BUTTON_OPTIONS[mode].position) {
+            if (CLOSE_BUTTON_OPTIONS[mode].position[i]) {
+                adsCloseButton.style[i] = CLOSE_BUTTON_OPTIONS[mode].position[i];
+            }
+        }
+        adsCloseButton.style.width = CLOSE_BUTTON_OPTIONS[mode].size;
+        adsCloseButton.style.height = CLOSE_BUTTON_OPTIONS[mode].size;
     }
 
 
@@ -504,6 +524,26 @@ function googletagCatfish(gt) {
             }
 
             return this;
+        },
+
+
+        bottomModeCloseButtonPosition: function(position) {
+            CLOSE_BUTTON_OPTIONS[ADS_MODES.BOTTOM].position = position;
+        },
+
+
+        bottomModeCloseButtonSize: function(size) {
+            CLOSE_BUTTON_OPTIONS[ADS_MODES.BOTTOM].size = size;
+        },
+
+
+        fullscreenModeCloseButtonPosition: function(position) {
+            CLOSE_BUTTON_OPTIONS[ADS_MODES.FULLSCREEN].position = position;
+        },
+
+
+        fullscreenModeCloseButtonSize: function(size) {
+            CLOSE_BUTTON_OPTIONS[ADS_MODES.FULLSCREEN].size = size;
         }
 
     };

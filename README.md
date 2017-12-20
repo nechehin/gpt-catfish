@@ -124,6 +124,37 @@ catfish
     .render();
 ```
 
+### Close button config
+
+use next methods for close button configuration:
+
+#### Position
+- bottomModeCloseButtonPosition({Object} position)
+- fullscreenModeCloseButtonPosition({Object} position)
+
+#### Size
+- bottomModeCloseButtonSize({String} size)
+- fullscreenModeCloseButtonSize({String} size)
+
+#### Defaults
+
+```js
+catfish.bottomModeCloseButtonPosition({ top: '-15px', left: '5px' });
+catfish.bottomModeCloseButtonSize('25px');
+
+catfish.fullscreenModeCloseButtonPosition({ top: '5px', left: '5px' });
+catfish.fullscreenModeCloseButtonSize('25px');
+```
+
+#### Example
+Show close button on right side for bottom mode:
+```js
+catfish
+    .addBottomModeSlot('/your_slot_name', [320, 100])
+    .bottomModeCloseButtonPosition({ top: '-15px', right: '5px' })
+    .render();
+```
+
 ### Events
 Available events for listen:
 - rendered (catfish.EVENTS.RENDERED) - fire after ads was rendered
@@ -172,6 +203,7 @@ also, you can enable debug by ?gpt-catfish-debug query param
                  this.addFullscreenModeSlot('/your_slot_name', [320, 480]);
                  this.addBottomModeSlot('/your_slot_name', [320, 100]);
                  this.setDefaultModeBottom();
+                 this.bottomModeCloseButtonPosition({ top: '-15px', right: '5px' });
              })
              .addWidth(481, 640, function(){
                  this.addFullscreenModeSlot('/your_slot_name', [480, 480]);
