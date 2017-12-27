@@ -159,6 +159,7 @@ catfish
 Available events for listen:
 - rendered (catfish.EVENTS.RENDERED) - fire after ads was rendered
 - closed (catfish.EVENTS.CLOSED) - fire after ads was closed
+- empty (catfish.EVENTS.EMPTY) - fire if ads empty
 
 ```js
 catfish

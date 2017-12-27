@@ -7,7 +7,7 @@
 /**
  * Google-tag catfish
  *
- * @version 0.0.10
+ * @version 0.0.11
  * @param {Object} gt GoogleTag object instance
  * @return {Object}
  */
@@ -38,7 +38,8 @@ function googletagCatfish(gt) {
 
     var EVENTS = {
         RENDERED: 'rendered',
-        CLOSED: 'closed'
+        CLOSED: 'closed',
+        EMPTY: 'empty'
     };
 
     var CLOSE_BUTTON_OPTIONS = {};
@@ -283,6 +284,7 @@ function googletagCatfish(gt) {
 
         if (event.isEmpty) {
             log('Empty ads response from slot ' + event.slot.getAdUnitPath());
+            fireEvent(EVENTS.EMPTY);
             return;
         }
 
